@@ -27,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer(); // Enables API explorer for Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "TokenAuthMinimalApi", Version = "v1" });
-    
+
     // Configure Swagger to use JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -91,7 +91,7 @@ app.MapPost("register",
      });
 
 // Login endpoint
-app.MapPost("/login",async  (UserManager<IdentityUser> userMgr,User loginUser, IConfiguration config) =>
+app.MapPost("/login", async (UserManager<IdentityUser> userMgr, User loginUser, IConfiguration config) =>
 {
     var user = await userMgr.FindByNameAsync(loginUser.Username);
     if (user == null)
@@ -107,7 +107,7 @@ app.MapPost("/login",async  (UserManager<IdentityUser> userMgr,User loginUser, I
 });
 
 
- 
+
 
 // app.MapGet("/secure-data",   (() => "This is a secure endpoint")).RequireAuthorization();
 
