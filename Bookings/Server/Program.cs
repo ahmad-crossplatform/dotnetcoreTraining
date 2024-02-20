@@ -1,8 +1,8 @@
+using System.Security.Claims;
 using System.Text;
 using Bookings.Server;
 using Bookings.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -15,6 +15,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySQL(connectionString);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "ClientRequests", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:5210");
+    });
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -31,7 +38,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "User"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -78,6 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("ClientRequests");
 
 app.UseHttpsRedirection();
 
@@ -86,15 +98,17 @@ var root = app.MapGroup("api");
 
 root.MapVenuesApi();
 root.MapUsersApi();
+root.MapBookingsApi();
 
 
+app.MapGet("isAlive", () => Task.FromResult(Results.Ok("Alive"))).RequireAuthorization("User");
 app.Run();
 
 
 public class ApplicationDbContext : DbContext
 {
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<User>   Users { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public DbSet<Venue> Venues { get; set; }
 

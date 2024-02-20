@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookings.Identity.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240211222417_ApplicationUser")]
+    partial class ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,13 +121,13 @@ namespace Bookings.Identity.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5edc60da-9d28-4e34-979c-1c1c77046d8f",
+                            Id = "b25cdfa3-a0ea-493c-84fa-836d5ba4768a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "bea62b02-02c9-4e56-a77c-64715968d423",
+                            Id = "1aa83d5e-856d-48ba-bf38-4e979b4a2298",
                             Name = "User",
                             NormalizedName = "USER"
                         });

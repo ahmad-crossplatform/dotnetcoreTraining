@@ -1,0 +1,75 @@
+@page "/login"
+@using Bookings.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@using Bookings.Client.Authentication
+@using Bookings.Client.Services
+@using Bookings.Shared.DTOs
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager;
+@inject AccountService AccountService; 
+@inject IJSRuntime js; 
+@inject AuthenticationHttpClient HttpClient; 
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm Model="_loginDto" OnSubmit="OnHandleSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+                <div class="card-header">Login an account</div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <input @bind="_loginDto.Email" class="form-control" type="email" placeholder="Enter Email address"/>
+                    </div>
+            
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input @bind="_loginDto.Password"
+                                               class="form-control"
+                                               type="@(ShowPassword ? "text" : "password")"
+                                               aria-label="password"
+                                               area-describedby="password"
+                                               placeholder="Enter Password"/>
+                            
+                                        <span class="input-group-text cursorStyle" id="password" @onclick="ShowPasswordClick">
+                                            @(ShowPassword ? "Hide" : "Show")
+                                        </span>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div  >
+                    <button class="btn btn-primary float-end" type="submit"> Login</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    private LoginDTO _loginDto = new();
+    public bool ShowPassword;
+
+    private async void OnHandleSubmit(EditContext obj)
+    {
+        var (flag, token, message) = await HttpClient.Login(_loginDto);
+        if (flag)
+        {
+            string customMessage = $"{message} {Environment.NewLine} {token}"; 
+            await js.InvokeVoidAsync("alert", customMessage);
+            _loginDto = new LoginDTO();
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(token);
+            NavManager.NavigateTo("/", forceLoad:true);
+        }
+        await js.InvokeVoidAsync("alert", message);
+    }
+
+    private void ShowPasswordClick()
+    {
+        ShowPassword = !ShowPassword; 
+    }
+
+}
