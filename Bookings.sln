@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookings.Identity", "Bookin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookings.Server", "Bookings\Server\Bookings.Server.csproj", "{648F22CE-DD74-4799-B2AF-CCE5479BCE8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookings.Client", "Bookings\Bookings.Client\Bookings.Client.csproj", "{7EDC2413-0E2C-4C87-99C6-CE32A6C4DC72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookings.Client", "Bookings\Client\Bookings.Client.csproj", "{7EDC2413-0E2C-4C87-99C6-CE32A6C4DC72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
